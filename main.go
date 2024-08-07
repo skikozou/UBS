@@ -11,7 +11,7 @@ func main() {
 	ubs := server.New()
 	cfg := ubs.Init()
 	cfg.SetMemoryBuffar(1024)
-	cfg.SetPort("8585")
+	cfg.SetPort("8080")
 	cfg.SetisGlobal(false)
 	ubs.HandlerFunc(func(cli *manager.Client) error {
 		var text string
