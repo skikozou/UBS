@@ -8,7 +8,7 @@ import (
 func example1() {
 	ubs := server.New()
 	ubs.HandlerFunc(func(cli *manager.Client) error {
-		cli.Write("hello, world!")
+		cli.WriteString("hello, world!")
 		cli.Conn.Close()
 		return nil
 	})

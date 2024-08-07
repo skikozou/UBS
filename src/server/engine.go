@@ -31,7 +31,6 @@ func (e *Engine) Run(port string, mbuf int) error {
 		if e.ExitFlag {
 			return nil
 		}
-		println(ln.Addr().String())
 		conn, err := ln.AcceptTCP()
 		if err != nil {
 			return err
