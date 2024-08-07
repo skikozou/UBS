@@ -35,8 +35,13 @@ func (c *EngineConfig) SetPort(port string) *EngineConfig {
 	return c
 }
 
-func (c *EngineConfig) SetisGlabal(isglobal bool) *EngineConfig {
+func (c *EngineConfig) SetisGlobal(isglobal bool) *EngineConfig {
 	c.isGlobal = isglobal
+	return c
+}
+
+func (c *EngineConfig) SetMemoryBuffar(buf int) *EngineConfig {
+	c.MemoryBuffer = buf
 	return c
 }
 
@@ -61,7 +66,7 @@ func (u *UBS) Init() *EngineConfig {
 	return cfg
 }
 
-//SetOnRequest
+//Handler Func
 
 func (u *UBS) HandlerFunc(req Request) *UBS {
 	u.Engine.Config.Handler = req
