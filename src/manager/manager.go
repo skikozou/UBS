@@ -1,6 +1,9 @@
 package manager
 
+import "net"
+
 type Client struct {
-	Index int
-	IP    string
+	Conn *net.TCPConn
+	IP   string
+	Port string
 }

@@ -9,5 +9,6 @@ func main() {
 	fmt.Println("main")
 
 	ubs := server.New()
-	fmt.Println(ubs)
+	//here setting
+	ubs.Init().Start()
 }

@@ -1,5 +1,12 @@
 package server
 
+import (
+	"UBS/src/manager"
+	"UBS/src/server"
+	"net"
+	"strings"
+)
+
 type UBS struct {
 	Engine *Engine
 }
@@ -15,9 +22,9 @@ func New() *UBS {
 //listen function
 
 type EngineConfig struct {
-	Port        string
-	isPortReady bool
-
+	Port         string
+	isPortReady  bool
+	isGlobal     bool
 	MemoryBuffer int
 	Start        func() error
 	Err          error
@@ -34,6 +41,7 @@ func (u *UBS) Init() *EngineConfig {
 	cfg := &EngineConfig{
 		Port:         ":8080",
 		isPortReady:  true,
+		isGlobal:     true,
 		MemoryBuffer: 1024,
 	}
 	cfg.Start = func() error {
@@ -41,4 +49,22 @@ func (u *UBS) Init() *EngineConfig {
 	}
 
 	return cfg
+}
+
+//onRequest
+
+func (e *Engine) onRequest(lisn *net.TCPListener) error {
+	for {
+		conn, err := lisn.AcceptTCP()
+		if err != nil {
+			return err
+		}
+		addr := strings.Split(conn.RemoteAddr().String(), ":")
+		cli := &manager.Client{
+			Conn: conn,
+			IP:   addr[0],
+			Port: ":" + addr[1],
+		}
+		return server.Request(cli)
+	}
 }

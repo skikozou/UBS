@@ -1,6 +1,7 @@
 package server
 
 import (
+	"UBS/src/manager"
 	"net"
 )
 
@@ -9,7 +10,11 @@ type Engine struct {
 }
 
 func (e *Engine) Run(port string, mbuf int) error {
-	tcpAddr, err := net.ResolveTCPAddr("tcp", e.Config.Port)
+	host := ""
+	if e.Config.isGlobal {
+		host = "0.0.0.0"
+	}
+	tcpAddr, err := net.ResolveTCPAddr("tcp", host+e.Config.Port)
 	if err != nil {
 		return err
 	}
@@ -17,6 +22,7 @@ func (e *Engine) Run(port string, mbuf int) error {
 	if err != nil {
 		return err
 	}
-	conn, err := ln.AcceptTCP()
-	//受け付けた後の関数
+	return e.onRequest(ln)
 }
+
+type Request func(cli *manager.Client)
