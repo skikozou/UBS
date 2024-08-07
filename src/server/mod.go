@@ -29,7 +29,7 @@ type EngineConfig struct {
 	Start        func() error
 	StartAsync   func(resError chan<- error)
 	Handler      func(cli *manager.Client) error
-	Err          error
+	AsyncHandler func(resError chan<- error, cli *manager.Client) error
 }
 
 func (c *EngineConfig) SetPort(port string) *EngineConfig {
@@ -77,5 +77,10 @@ func (u *UBS) Init() *EngineConfig {
 
 func (u *UBS) HandlerFunc(req Request) *UBS {
 	u.Engine.Config.Handler = req
+	return u
+}
+
+func (u *UBS) HandlerAsyncFunc(req AsyncRequest) *UBS {
+	u.Engine.Config.AsyncHandler = req
 	return u
 }

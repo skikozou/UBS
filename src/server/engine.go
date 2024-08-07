@@ -13,6 +13,7 @@ type Engine struct {
 }
 
 type Request func(cli *manager.Client) error
+type AsyncRequest func(resError chan<- error, cli *manager.Client) error
 
 func (e *Engine) Run(port string, mbuf int) error {
 	host := ""
@@ -49,6 +50,7 @@ func (e *Engine) Run(port string, mbuf int) error {
 }
 
 func (e *Engine) RunAsync(resError chan<- error, port string, mbuf int) {
+	nError := make(chan error)
 	host := ""
 	if e.Config.isGlobal {
 		host = "0.0.0.0"
@@ -79,7 +81,8 @@ func (e *Engine) RunAsync(resError chan<- error, port string, mbuf int) {
 			IP:   addr[0],
 			Port: ":" + addr[1],
 		}
-		err = e.Config.Handler(cli)
+		e.Config.AsyncHandler(nError, cli)
+		err = <-nError
 		if err != nil {
 			resError <- err
 			return

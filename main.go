@@ -14,7 +14,7 @@ func main() {
 	cfg.SetMemoryBuffar(1024)
 	cfg.SetPort("8080")
 	cfg.SetisGlobal(false)
-	ubs.HandlerFunc(func(cli *manager.Client) error {
+	ubs.AsyncHandlerFunc(func(resError chan<- error, cli *manager.Client) {
 		var text string
 		err := cli.ReadString(&text, cfg.MemoryBuffer)
 		if err != nil {
