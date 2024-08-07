@@ -12,7 +12,7 @@ func example3() {
 	cfg.SetisGlobal(true)
 	cfg.MemoryBuffer = 1024
 	ubs.HandlerFunc(func(cli *manager.Client) error {
-		cli.Write("hello, world!")
+		cli.WriteString("hello, world!")
 		cli.Conn.Close()
 		return nil
 	})

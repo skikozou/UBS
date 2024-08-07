@@ -8,8 +8,6 @@ import (
 )
 
 func main() {
-	fmt.Println("main")
-
 	ubs := server.New()
 	cfg := ubs.Init()
 	cfg.SetMemoryBuffar(1024)
@@ -17,13 +15,13 @@ func main() {
 	cfg.SetisGlobal(false)
 	ubs.HandlerFunc(func(cli *manager.Client) error {
 		var text string
-		err := cli.Read(&text, cfg.MemoryBuffer)
+		err := cli.ReadString(&text, cfg.MemoryBuffer)
 		if err != nil {
 			return err
 		}
 		fmt.Println(text)
 
-		err = cli.Write(text)
+		err = cli.WriteBytes([]byte(text))
 		if err != nil {
 			return err
 		}
