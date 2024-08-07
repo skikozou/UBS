@@ -27,6 +27,7 @@ type EngineConfig struct {
 	isGlobal     bool
 	MemoryBuffer int
 	Start        func() error
+	StartAsync   func(resError chan<- error)
 	Handler      func(cli *manager.Client) error
 	Err          error
 }
@@ -62,6 +63,11 @@ func (u *UBS) Init() *EngineConfig {
 	}
 	cfg.Start = func() error {
 		return u.Engine.Run(cfg.Port, cfg.MemoryBuffer)
+	}
+	cfg.StartAsync = func(resError chan<- error) {
+		nError := make(chan error)
+		u.Engine.RunAsync(nError, cfg.Port, cfg.MemoryBuffer)
+		resError <- <-nError
 	}
 
 	return cfg

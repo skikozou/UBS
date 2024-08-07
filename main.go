@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/skikozou/UBS/src/manager"
 	"github.com/skikozou/UBS/src/server"
@@ -29,5 +30,10 @@ func main() {
 		cli.Conn.Close()
 		return nil
 	})
-	cfg.Start()
+	err := make(chan error)
+	go cfg.StartAsync(err)
+	Err := <-err
+	if Err != nil {
+		log.Fatal(err)
+	}
 }
