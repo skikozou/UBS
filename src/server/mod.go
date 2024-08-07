@@ -1,8 +1,9 @@
 package server
 
 import (
-	"UBS/src/manager"
 	"fmt"
+
+	"github.com/skikozou/UBS/src/manager"
 )
 
 type UBS struct {

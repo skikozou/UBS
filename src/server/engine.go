@@ -1,9 +1,10 @@
 package server
 
 import (
-	"UBS/src/manager"
 	"net"
 	"strings"
+
+	"github.com/skikozou/UBS/src/manager"
 )
 
 type Engine struct {
