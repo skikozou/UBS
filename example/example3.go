@@ -5,12 +5,16 @@ import (
 	"github.com/skikozou/UBS/src/server"
 )
 
-func example1() {
+func example3() {
 	ubs := server.New()
+	cfg := ubs.Init()
+	cfg.Port = "8080"
+	cfg.SetisGlobal(true)
+	cfg.MemoryBuffer = 1024
 	ubs.HandlerFunc(func(cli *manager.Client) error {
 		cli.Write("hello, world!")
 		cli.Conn.Close()
 		return nil
 	})
-	ubs.Init().Start()
+	cfg.Start()
 }
