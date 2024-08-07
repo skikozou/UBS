@@ -1,1 +1,1 @@
-# GoでTCPをこねこねするためのなんたら
+# TCP server module

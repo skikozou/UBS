@@ -12,26 +12,24 @@ func main() {
 	ubs := server.New()
 	cfg := ubs.Init()
 	cfg.SetMemoryBuffar(1024)
-	cfg.SetPort("8080")
-	cfg.SetisGlobal(false)
-	ubs.AsyncHandlerFunc(func(resError chan<- error, cli *manager.Client) {
+	cfg.SetPort("8585")
+	cfg.SetisGlobal(true)
+	ubs.HandlerAsyncFunc(func(resError chan<- error, cli *manager.Client) {
 		var text string
 		err := cli.ReadString(&text, cfg.MemoryBuffer)
 		if err != nil {
-			return err
+			resError <- err
+			return
 		}
 		fmt.Println(text)
 
-		err = cli.WriteBytes([]byte(text))
-		if err != nil {
-			return err
-		}
-
+		err = cli.WriteString(text)
 		cli.Conn.Close()
-		return nil
+		resError <- err
 	})
 	err := make(chan error)
 	go cfg.StartAsync(err)
+	fmt.Println("Async module")
 	Err := <-err
 	if Err != nil {
 		log.Fatal(err)

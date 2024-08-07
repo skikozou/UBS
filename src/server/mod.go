@@ -29,7 +29,7 @@ type EngineConfig struct {
 	Start        func() error
 	StartAsync   func(resError chan<- error)
 	Handler      func(cli *manager.Client) error
-	AsyncHandler func(resError chan<- error, cli *manager.Client) error
+	AsyncHandler func(resError chan<- error, cli *manager.Client)
 }
 
 func (c *EngineConfig) SetPort(port string) *EngineConfig {
@@ -67,7 +67,10 @@ func (u *UBS) Init() *EngineConfig {
 	cfg.StartAsync = func(resError chan<- error) {
 		nError := make(chan error)
 		u.Engine.RunAsync(nError, cfg.Port, cfg.MemoryBuffer)
-		resError <- <-nError
+		if <-nError != nil {
+			resError <- <-nError
+		}
+		resError <- nil
 	}
 
 	return cfg
