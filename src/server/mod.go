@@ -2,9 +2,7 @@ package server
 
 import (
 	"UBS/src/manager"
-	"UBS/src/server"
-	"net"
-	"strings"
+	"fmt"
 )
 
 type UBS struct {
@@ -14,7 +12,8 @@ type UBS struct {
 func New() *UBS {
 	return &UBS{
 		Engine: &Engine{
-			Config: &EngineConfig{},
+			Config:   &EngineConfig{},
+			ExitFlag: false,
 		},
 	}
 }
@@ -27,11 +26,22 @@ type EngineConfig struct {
 	isGlobal     bool
 	MemoryBuffer int
 	Start        func() error
+	Handler      func(cli *manager.Client) error
 	Err          error
 }
 
 func (c *EngineConfig) SetPort(port string) *EngineConfig {
 	c.Port = ":" + port
+	return c
+}
+
+func (c *EngineConfig) SetisGlabal(isglobal bool) *EngineConfig {
+	c.isGlobal = isglobal
+	return c
+}
+
+func (c *EngineConfig) DebugCfg() *EngineConfig {
+	fmt.Println(c)
 	return c
 }
 
@@ -51,20 +61,9 @@ func (u *UBS) Init() *EngineConfig {
 	return cfg
 }
 
-//onRequest
+//SetOnRequest
 
-func (e *Engine) onRequest(lisn *net.TCPListener) error {
-	for {
-		conn, err := lisn.AcceptTCP()
-		if err != nil {
-			return err
-		}
-		addr := strings.Split(conn.RemoteAddr().String(), ":")
-		cli := &manager.Client{
-			Conn: conn,
-			IP:   addr[0],
-			Port: ":" + addr[1],
-		}
-		return server.Request(cli)
-	}
+func (u *UBS) HandlerFunc(req Request) *UBS {
+	u.Engine.Config.Handler = req
+	return u
 }
