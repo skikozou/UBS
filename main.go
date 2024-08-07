@@ -1,9 +1,10 @@
 package main
 
 import (
-	"UBS/src/manager"
-	"UBS/src/server"
 	"fmt"
+
+	"github.com/skikozou/UBS/src/manager"
+	"github.com/skikozou/UBS/src/server"
 )
 
 func main() {
