@@ -1,3 +1,3 @@
-module github.com/evex-dev/hono.go
+module github.com/skikozou/UBS
 
 go 1.22.4
