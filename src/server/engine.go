@@ -49,46 +49,6 @@ func (e *Engine) Run(port string, mbuf int) error {
 	}
 }
 
-func (e *Engine) RunAsync(resError chan<- error, port string, mbuf int) {
-	nError := make(chan error)
-	host := ""
-	if e.Config.isGlobal {
-		host = "0.0.0.0"
-	}
-	tcpAddr, err := net.ResolveTCPAddr("tcp", host+port)
-	if err != nil {
-		resError <- err
-		return
-	}
-	ln, err := net.ListenTCP("tcp", tcpAddr)
-	if err != nil {
-		resError <- err
-		return
-	}
-	for {
-		if e.ExitFlag {
-			resError <- nil
-			return
-		}
-		conn, err := ln.AcceptTCP()
-		if err != nil {
-			resError <- err
-			return
-		}
-		addr := strings.Split(conn.RemoteAddr().String(), ":")
-		cli := &manager.Client{
-			Conn: conn,
-			IP:   addr[0],
-			Port: ":" + addr[1],
-		}
-		e.Config.AsyncHandler(nError, cli)
-		if <-nError != nil {
-			resError <- <-nError
-			return
-		}
-	}
-}
-
 func (e *Engine) Exit() {
 	e.ExitFlag = true
 }

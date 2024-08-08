@@ -13,7 +13,7 @@ func example3() {
 	cfg.Port = "8080"
 	cfg.SetisGlobal(true)
 	cfg.MemoryBuffer = 1024
-	ubs.HandlerFunc(func(cli *manager.Client) error {
+	ubs.ConnectEvent(func(cli *manager.Client) error {
 		var text string
 		err := cli.ReadString(&text, cfg.MemoryBuffer)
 		if err != nil {
